@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { preorderService } from '../../services';
+import { preorderService } from '@/services';
 import { Search, Package, Calendar, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import Table from '../../components/ui/Table';
-import Badge from '../../components/ui/Badge';
-import Card from '../../components/ui/Card';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import Modal from '../../components/ui/Modal';
-import { formatCurrency, formatDate, getStatusColor, debounce } from '../../utils/helpers';
+import Button from '@/components/admin/ui/Button';
+import Table from '@/components/admin/ui/Table';
+import Badge from '@/components/admin/ui/Badge';
+import Card from '@/components/admin/ui/Card';
+import LoadingSpinner from '@/components/admin/ui/LoadingSpinner';
+import Modal from '@/components/admin/ui/Modal';
+import { formatCurrency, formatDate, getStatusColor, debounce } from '@/utils/helpers';
 import { toast } from 'react-hot-toast';
 
 export default function PreordersPage() {
@@ -26,59 +26,52 @@ export default function PreordersPage() {
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(
-    ['preorders', search, filters, pagination],
-    () => preorderService.getPreorders({
+  // Updated to React Query v5 syntax
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['preorders', search, filters, pagination],
+    queryFn: () => preorderService.getPreorders({
       search,
       ...filters,
       page: pagination.page,
       limit: pagination.limit,
     }),
-    {
-      keepPreviousData: true,
-      refetchInterval: 2 * 60 * 1000, // Refetch every 2 minutes
-    }
-  );
+    keepPreviousData: true,
+    refetchInterval: 2 * 60 * 1000, // Refetch every 2 minutes
+  });
 
-  const updateStatusMutation = useMutation(
-    ({ id, status }) => preorderService.updatePreorderStatus(id, status),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('preorders');
-        toast.success('Preorder status updated');
-      },
-      onError: (error) => {
-        toast.error(error.response?.data?.message || 'Failed to update preorder status');
-      },
-    }
-  );
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }) => preorderService.updatePreorderStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['preorders'] });
+      toast.success('Preorder status updated');
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to update preorder status');
+    },
+  });
 
-  const convertToOrderMutation = useMutation(
-    preorderService.convertToOrder,
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries('preorders');
-        queryClient.invalidateQueries('orders');
-        toast.success(`Preorder converted to order #${data.orderNumber}`);
-      },
-      onError: (error) => {
-        toast.error(error.response?.data?.message || 'Failed to convert preorder');
-      },
-    }
-  );
+  const convertToOrderMutation = useMutation({
+    mutationFn: preorderService.convertToOrder,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['preorders'] });
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+      toast.success(`Preorder converted to order #${data.orderNumber}`);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to convert preorder');
+    },
+  });
 
-  const cancelPreorderMutation = useMutation(
-    preorderService.cancelPreorder,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('preorders');
-        toast.success('Preorder cancelled');
-      },
-      onError: (error) => {
-        toast.error(error.response?.data?.message || 'Failed to cancel preorder');
-      },
-    }
-  );
+  const cancelPreorderMutation = useMutation({
+    mutationFn: preorderService.cancelPreorder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['preorders'] });
+      toast.success('Preorder cancelled');
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to cancel preorder');
+    },
+  });
 
   const debouncedSearch = debounce((value) => {
     setSearch(value);
@@ -322,7 +315,7 @@ export default function PreordersPage() {
                               <Button
                                 size="sm"
                                 onClick={() => handleConvertToOrder(preorder.id)}
-                                loading={convertToOrderMutation.isLoading}
+                                loading={convertToOrderMutation.isPending}
                               >
                                 Convert
                               </Button>
@@ -332,7 +325,7 @@ export default function PreordersPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleStatusUpdate(preorder.id, 'confirmed')}
-                                loading={updateStatusMutation.isLoading}
+                                loading={updateStatusMutation.isPending}
                               >
                                 Confirm
                               </Button>

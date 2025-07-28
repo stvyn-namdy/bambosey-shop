@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Edit, Trash2, Eye, MoreHorizontal, Mail, Phone } from 'lucide-react';
-import { formatDate, formatCurrency } from '../../utils/helpers';
+import { formatDate, formatCurrency } from '@/utils/helpers';
 import Table from '../ui/Table';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';

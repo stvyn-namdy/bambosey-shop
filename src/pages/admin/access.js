@@ -1,12 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useAuth } from '@/hooks/useAuth'; 
+import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function AdminAccess() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      const from = router.query.from || '/admin/dashboard';
+      console.log('🔄 AdminAccess: User already authenticated, redirecting to:', from);
+      router.replace(from);
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  // Don't render login form if already authenticated or still loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   const validateForm = () => {
     const newErrors = {};
@@ -22,19 +58,19 @@ export default function AdminAccess() {
 
     setLoading(true);
     try {
-      // Simulate login - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await login(formData);
       
-      // Store in localStorage for demo
-      localStorage.setItem('isAdminAuthenticated', 'true');
-      localStorage.setItem('adminUser', JSON.stringify({
-        email: formData.email,
-        name: 'Admin User'
-      }));
+      // Success - redirect will be handled by useEffect
+      const from = router.query.from || '/admin/dashboard';
+      console.log('✅ AdminAccess: Login successful, redirecting to:', from);
+      toast.success('Login successful!');
       
-      router.push('/admin/dashboard');
+      // Use replace to prevent back button issues
+      router.replace(from);
     } catch (error) {
-      setErrors({ general: 'Login failed' });
+      console.error('❌ AdminAccess: Login failed:', error);
+      toast.error(error.message || 'Login failed');
+      setErrors({ general: error.message || 'Login failed' });
     } finally {
       setLoading(false);
     }
@@ -43,7 +79,10 @@ export default function AdminAccess() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   return (
@@ -120,13 +159,11 @@ export default function AdminAccess() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 >
-                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    {showPassword ? (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                    ) : (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    )}
-                  </svg>
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
                 </button>
               </div>
               {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
@@ -151,14 +188,6 @@ export default function AdminAccess() {
           </form>
 
           {/* Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">
-              Need help?{' '}
-              <button className="text-blue-600 hover:text-blue-800 font-medium">
-                Contact Support
-              </button>
-            </p>
-          </div>
         </div>
 
         {/* Version Info */}

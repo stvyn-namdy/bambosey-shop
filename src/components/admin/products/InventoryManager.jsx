@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Package, AlertTriangle, TrendingUp, TrendingDown, Search } from 'lucide-react';
-import { formatNumber, debounce } from '../../utils/helpers';
+import { formatNumber, debounce } from '@/utils/helpers';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';

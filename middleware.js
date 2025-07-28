@@ -10,27 +10,25 @@ export function middleware(request) {
   
   // Protected routes that require admin authentication
   const protectedRoutes = [
-    '/dashboard',
-    '/products',
-    '/orders',
-    '/customers',
-    '/inventory',
-    '/analytics',
-    '/reviews',
-    '/settings',
+    '/admin/dashboard',
+    '/admin/products',
+    '/admin/orders',
+    '/admin/customers',
+    '/admin/inventory',
+    '/admin/analytics',
+    '/admin/reviews',
+    '/admin/settings',
   ];
   
   // Public routes that don't require authentication
   const publicRoutes = [
-    '/login',
+    '/admin/access',
+    '/login', // Keep as fallback
     '/404',
     '/500',
-    '/_next',
-    '/favicon.ico',
-    '/api',
   ];
   
-  // Allow all static assets and API routes
+  // Always allow static assets and API routes
   if (pathname.startsWith('/_next/') || 
       pathname.startsWith('/api/') || 
       pathname === '/favicon.ico' ||
@@ -47,15 +45,14 @@ export function middleware(request) {
     pathname.startsWith(route)
   );
   
-  // FIXED: Prevent redirect loops
-  if (pathname === '/login') {
-    // If user has token and is on login page, redirect to dashboard
+  // Handle admin access page (login) - PREVENT LOOPS
+  if (pathname === '/admin/access') {
     if (token) {
-      console.log('🔄 Redirecting authenticated user from login to dashboard');
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      console.log('🔄 User has token, redirecting from access to dashboard');
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
-    // If no token, allow access to login page
-    console.log('✅ Allowing access to login page');
+    // User doesn't have token, allow access to login page
+    console.log('✅ Allowing access to admin/access page');
     return NextResponse.next();
   }
   
@@ -63,29 +60,50 @@ export function middleware(request) {
   if (pathname === '/') {
     if (token) {
       console.log('🔄 Redirecting authenticated user from root to dashboard');
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     } else {
-      console.log('🔄 Redirecting unauthenticated user from root to login');
-      return NextResponse.redirect(new URL('/login', request.url));
+      console.log('🔄 Redirecting unauthenticated user from root to admin/access');
+      return NextResponse.redirect(new URL('/admin/access', request.url));
     }
   }
   
-  // Redirect to login if accessing protected route without token
-  if (isProtectedRoute && !token) {
-    console.log('🔒 Redirecting to login for protected route:', pathname);
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
+  // Handle old /login route - redirect to new admin/access
+  if (pathname === '/login') {
+    console.log('🔄 Redirecting from old /login to /admin/access');
+    return NextResponse.redirect(new URL('/admin/access', request.url));
   }
   
-  // Allow public routes
+  // Handle /admin root - redirect based on auth status
+  if (pathname === '/admin') {
+    if (token) {
+      console.log('🔄 Redirecting from /admin to /admin/dashboard');
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+    } else {
+      console.log('🔄 Redirecting from /admin to /admin/access');
+      return NextResponse.redirect(new URL('/admin/access', request.url));
+    }
+  }
+  
+  // Handle protected routes
+  if (isProtectedRoute) {
+    if (!token) {
+      console.log('🔒 No token, redirecting to admin/access from:', pathname);
+      const accessUrl = new URL('/admin/access', request.url);
+      accessUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(accessUrl);
+    }
+    console.log('✅ Token found, allowing access to protected route:', pathname);
+    return NextResponse.next();
+  }
+  
+  // Handle public routes
   if (isPublicRoute) {
     console.log('✅ Allowing access to public route:', pathname);
     return NextResponse.next();
   }
   
-  // Default: allow the request
-  console.log('✅ Allowing request to:', pathname);
+  // Default: allow the request for any other paths
+  console.log('✅ Default allowing request to:', pathname);
   return NextResponse.next();
 }
 
@@ -97,7 +115,7 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public files (images, etc.)
+     * - public files with extensions
      */
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
   ],

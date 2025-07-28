@@ -1,36 +1,37 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { analyticsService } from '../../services';
+import { analyticsService } from '@/services';
 import { Calendar, TrendingUp, Users, Package, DollarSign } from 'lucide-react';
-import Card from '../../components/ui/Card';
-import StatsCard from '../../components/dashboard/StatsCard';
-import AreaChart from '../../components/charts/AreaChart';
-import BarChart from '../../components/charts/BarChart';
-import PieChart from '../../components/charts/PieChart';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import Card from '@/components/admin/ui/Card';
+import StatsCard from '@/components/admin/dashboard/StatsCard';
+import AreaChart from '@/components/admin/charts/AreaChart';
+import BarChart from '@/components/admin/charts/BarChart';
+import PieChart from '@/components/admin/charts/PieChart';
+import LoadingSpinner from '@/components/admin/ui/LoadingSpinner';
 
 export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState('30d');
 
-  const { data: salesData, isLoading: salesLoading } = useQuery(
-    ['sales-analytics', dateRange],
-    () => analyticsService.getSalesAnalytics({ range: dateRange })
-  );
+  // Updated to React Query v5 syntax
+  const { data: salesData, isLoading: salesLoading } = useQuery({
+    queryKey: ['sales-analytics', dateRange],
+    queryFn: () => analyticsService.getSalesAnalytics({ range: dateRange }),
+  });
 
-  const { data: productData, isLoading: productLoading } = useQuery(
-    ['product-analytics', dateRange],
-    () => analyticsService.getProductPerformance({ range: dateRange })
-  );
+  const { data: productData, isLoading: productLoading } = useQuery({
+    queryKey: ['product-analytics', dateRange],
+    queryFn: () => analyticsService.getProductPerformance({ range: dateRange }),
+  });
 
-  const { data: customerData, isLoading: customerLoading } = useQuery(
-    ['customer-analytics', dateRange],
-    () => analyticsService.getCustomerAnalytics({ range: dateRange })
-  );
+  const { data: customerData, isLoading: customerLoading } = useQuery({
+    queryKey: ['customer-analytics', dateRange],
+    queryFn: () => analyticsService.getCustomerAnalytics({ range: dateRange }),
+  });
 
-  const { data: revenueData, isLoading: revenueLoading } = useQuery(
-    ['revenue-analytics', dateRange],
-    () => analyticsService.getRevenueAnalytics({ range: dateRange })
-  );
+  const { data: revenueData, isLoading: revenueLoading } = useQuery({
+    queryKey: ['revenue-analytics', dateRange],
+    queryFn: () => analyticsService.getRevenueAnalytics({ range: dateRange }),
+  });
 
   return (
     <div className="space-y-6">

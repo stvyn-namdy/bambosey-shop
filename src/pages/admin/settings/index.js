@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Save, Upload, Bell, Shield, CreditCard, Globe } from 'lucide-react';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
+import Card from '@/components/admin/ui/Card';
+import Button from '@/components/admin/ui/Button';
+import Input from '@/components/admin/ui/Input';
 import { toast } from 'react-hot-toast';
 
 export default function SettingsPage() {

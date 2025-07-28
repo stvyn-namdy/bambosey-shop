@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { orderService } from '../../services';
+import { orderService } from '@/services';
 import { Search, Filter, Download } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import OrderTable from '../../components/orders/OrderTable';
-import { debounce } from '../../utils/helpers';
+import Button from '@/components/admin/ui/Button';
+import OrderTable from '@/components/admin/orders/OrderTable';
+import { debounce } from '@/utils/helpers';
 
 export default function OrdersPage() {
   const [search, setSearch] = useState('');
@@ -17,18 +17,17 @@ export default function OrdersPage() {
     limit: 25,
   });
 
-  const { data, isLoading, error } = useQuery(
-    ['orders', search, filters, pagination],
-    () => orderService.getOrders({
+  // Updated to React Query v5 syntax
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['orders', search, filters, pagination],
+    queryFn: () => orderService.getOrders({
       search,
       ...filters,
       page: pagination.page,
       limit: pagination.limit,
     }),
-    {
-      keepPreviousData: true,
-    }
-  );
+    keepPreviousData: true,
+  });
 
   const debouncedSearch = debounce((value) => {
     setSearch(value);

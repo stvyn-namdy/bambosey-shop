@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Package, Truck, MapPin, CreditCard, User, Calendar, Edit } from 'lucide-react';
-import { formatCurrency, formatDateTime, getStatusColor } from '../../utils/helpers';
+import { formatCurrency, formatDateTime, getStatusColor } from '@/utils/helpers';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';

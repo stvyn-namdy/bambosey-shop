@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Package, Truck, CheckCircle, XCircle } from 'lucide-react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import { ORDER_STATUSES } from '../../utils/constants';
+import { ORDER_STATUSES } from '@/utils/constant';
 
 const OrderStatus = ({ isOpen, onClose, order, onUpdate }) => {
   const [loading, setLoading] = useState(false);

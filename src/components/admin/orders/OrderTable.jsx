@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, MoreHorizontal, Package, Truck } from 'lucide-react';
-import { formatCurrency, formatDateTime, getStatusColor } from '../../utils/helpers';
+import { formatCurrency, formatDateTime, getStatusColor } from '@/utils/helpers';
 import Table from '../ui/Table';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';

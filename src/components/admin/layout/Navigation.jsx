@@ -16,15 +16,15 @@ const Navigation = () => {
   const router = useRouter();
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home, current: router.pathname === '/dashboard' },
-    { name: 'Products', href: '/products', icon: Package, current: router.pathname.startsWith('/products') },
-    { name: 'Orders', href: '/orders', icon: ShoppingCart, current: router.pathname.startsWith('/orders') && !router.pathname.includes('preorders') },
-    { name: 'Preorders', href: '/orders/preorders', icon: ShoppingBag, current: router.pathname === '/orders/preorders' },
-    { name: 'Customers', href: '/customers', icon: Users, current: router.pathname.startsWith('/customers') },
-    { name: 'Inventory', href: '/inventory', icon: Layers, current: router.pathname.startsWith('/inventory') },
-    { name: 'Analytics', href: '/analytics', icon: BarChart3, current: router.pathname.startsWith('/analytics') },
-    { name: 'Reviews', href: '/reviews', icon: MessageSquare, current: router.pathname.startsWith('/reviews') },
-    { name: 'Settings', href: '/settings', icon: Settings, current: router.pathname.startsWith('/settings') },
+    { name: 'Dashboard', href: '/admin/dashboard', icon: Home, current: router.pathname === '/admin/dashboard' },
+    { name: 'Products', href: '/admin/products', icon: Package, current: router.pathname.startsWith('/admin/products') },
+    { name: 'Orders', href: '/admin/orders', icon: ShoppingCart, current: router.pathname.startsWith('/admin/orders') && !router.pathname.includes('preorders') },
+    { name: 'Preorders', href: '/admin/orders/preorders', icon: ShoppingBag, current: router.pathname === '/admin/orders/preorders' },
+    { name: 'Customers', href: '/admin/customers', icon: Users, current: router.pathname.startsWith('/admin/customers') },
+    { name: 'Inventory', href: '/admin/inventory', icon: Layers, current: router.pathname.startsWith('/admin/inventory') },
+    { name: 'Analytics', href: '/admin/analytics', icon: BarChart3, current: router.pathname.startsWith('/admin/analytics') },
+    { name: 'Reviews', href: '/admin/reviews', icon: MessageSquare, current: router.pathname.startsWith('/admin/reviews') },
+    { name: 'Settings', href: '/admin/settings', icon: Settings, current: router.pathname.startsWith('/admin/settings') },
   ];
 
   return (

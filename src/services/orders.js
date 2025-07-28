@@ -1,33 +1,41 @@
 import api from './api';
 
-export const inventoryService = {
-  // Get inventory data
-  getInventory: async (params = {}) => {
-    const response = await api.get('/inventory', { params });
+export const orderService = {
+  // Get all orders
+  getOrders: async (params = {}) => {
+    const response = await api.get('/admin/orders', { params });
     return response.data;
   },
 
-  // Update inventory
-  updateInventory: async (variantId, data) => {
-    const response = await api.put(`/inventory/${variantId}`, data);
+  // Get single order
+  getOrder: async (id) => {
+    const response = await api.get(`/admin/orders/${id}`);
     return response.data;
   },
 
-  // Get low stock alerts
-  getLowStockAlerts: async () => {
-    const response = await api.get('/inventory/alerts');
+  // Get recent orders
+  getRecentOrders: async (limit = 10) => {
+    const response = await api.get('/admin/orders/recent', { 
+      params: { limit } 
+    });
     return response.data;
   },
 
-  // Get inventory analytics
-  getInventoryAnalytics: async (params = {}) => {
-    const response = await api.get('/admin/inventory/analytics', { params });
+  // Update order status
+  updateOrderStatus: async (id, status) => {
+    const response = await api.put(`/admin/orders/${id}/status`, { status });
     return response.data;
   },
 
-  // Bulk update inventory
-  bulkUpdateInventory: async (updates) => {
-    const response = await api.post('/inventory/bulk-update', { updates });
+  // Cancel order
+  cancelOrder: async (id) => {
+    const response = await api.put(`/admin/orders/${id}/cancel`);
+    return response.data;
+  },
+
+  // Get order analytics
+  getOrderAnalytics: async (params = {}) => {
+    const response = await api.get('/admin/orders/analytics', { params });
     return response.data;
   },
 };

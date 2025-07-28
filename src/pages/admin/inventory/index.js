@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useInventory, useLowStockAlerts } from '../../hooks/useInventory';
-import InventoryManager from '../../components/products/InventoryManager';
-import Card from '../../components/ui/Card';
-import Badge from '../../components/ui/Badge';
+import { useInventory, useLowStockAlerts } from '@/hooks/useInventory';
+import InventoryManager from '@/components/admin/products/InventoryManager';
+import Card from '@/components/admin/ui/Card';
+import Badge from '@/components/admin/ui/Badge';
 import { AlertTriangle, Package, TrendingDown } from 'lucide-react';
 
 export default function InventoryPage() {

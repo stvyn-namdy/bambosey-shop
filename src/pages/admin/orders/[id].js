@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import { useOrder, useUpdateOrderStatus, useCancelOrder } from '../../hooks/useOrders';
-import OrderDetails from '../../components/orders/OrderDetails';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { useOrder, useUpdateOrderStatus, useCancelOrder } from '@/hooks/useOrders';
+import OrderDetails from '@/components/admin/orders/OrderDetails';
+import LoadingSpinner from '@/components/admin/ui/LoadingSpinner';
 import { toast } from 'react-hot-toast';
 
 export default function OrderDetailPage() {

@@ -19,27 +19,27 @@ import {
 export default function Dashboard() {
   const [dateRange, setDateRange] = useState('7d');
 
-  // Fetch dashboard data
-  const { data: stats, isLoading: statsLoading } = useQuery(
-    ['dashboard-stats', dateRange],
-    () => analyticsService.getDashboardStats({ range: dateRange }),
-    { refetchInterval: 5 * 60 * 1000 } // Refetch every 5 minutes
-  );
+  // Fetch dashboard data - Updated to v5 syntax
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboard-stats', dateRange],
+    queryFn: () => analyticsService.getDashboardStats({ range: dateRange }),
+    refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+  });
 
-  const { data: recentOrders, isLoading: ordersLoading } = useQuery(
-    'recent-orders',
-    () => orderService.getRecentOrders(10)
-  );
+  const { data: recentOrders, isLoading: ordersLoading } = useQuery({
+    queryKey: ['recent-orders'],
+    queryFn: () => orderService.getRecentOrders(10),
+  });
 
-  const { data: salesData, isLoading: salesLoading } = useQuery(
-    ['sales-analytics', dateRange],
-    () => analyticsService.getSalesAnalytics({ range: dateRange })
-  );
+  const { data: salesData, isLoading: salesLoading } = useQuery({
+    queryKey: ['sales-analytics', dateRange],
+    queryFn: () => analyticsService.getSalesAnalytics({ range: dateRange }),
+  });
 
-  const { data: topProducts, isLoading: productsLoading } = useQuery(
-    ['top-products', dateRange],
-    () => analyticsService.getProductPerformance({ range: dateRange, limit: 5 })
-  );
+  const { data: topProducts, isLoading: productsLoading } = useQuery({
+    queryKey: ['top-products', dateRange],
+    queryFn: () => analyticsService.getProductPerformance({ range: dateRange, limit: 5 }),
+  });
 
   if (statsLoading) {
     return (

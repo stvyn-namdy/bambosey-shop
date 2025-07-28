@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useCustomers } from '../../hooks/useCustomers';
+import { useCustomers } from '@/hooks/useCustomers';
 import { Search, UserPlus, Download } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import CustomerTable from '../../components/customers/CustomerTable';
-import { debounce } from '../../utils/helpers';
+import Button from '@/components/admin/ui/Button';
+import CustomerTable from '@/components/admin/customers/CustomerTable';
+import { debounce } from '@/utils/helpers';
 
 export default function CustomersPage() {
   const [search, setSearch] = useState('');

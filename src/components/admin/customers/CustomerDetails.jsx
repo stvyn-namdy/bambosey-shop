@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Edit, Mail, Phone, MapPin, Calendar, ShoppingBag } from 'lucide-react';
-import { formatDate, formatCurrency, formatDateTime } from '../../utils/helpers';
+import { formatDate, formatCurrency, formatDateTime } from '@/utils/helpers';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';

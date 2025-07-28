@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -10,6 +10,10 @@ const Layout = ({ children }) => {
   const { user, loading, isAuthenticated } = useAuth();
   const router = useRouter();
 
+  // Routes that should not show the admin layout
+  const publicRoutes = ['/admin/access', '/login', '/404', '/500'];
+  const shouldShowLayout = !publicRoutes.includes(router.pathname);
+
   // Show loading spinner while checking auth
   if (loading) {
     return (
@@ -19,15 +23,23 @@ const Layout = ({ children }) => {
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated && router.pathname !== '/login') {
-    router.push('/login');
-    return null;
+  // Don't show layout on public routes (like admin/access)
+  if (!shouldShowLayout) {
+    return <>{children}</>;
   }
 
-  // Don't show layout on login page
-  if (router.pathname === '/login') {
-    return <>{children}</>;
+  // Show layout only for authenticated users on protected routes
+  if (!isAuthenticated) {
+    // Don't render anything for unauthenticated users on protected routes
+    // The middleware will handle the redirect to /admin/access
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <LoadingSpinner size="large" />
+          <p className="mt-4 text-gray-600">Redirecting to login...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { productService } from '../../services';
+import { productService } from '@/services/products';
 import { Plus, Search, Filter } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
-import ProductTable from '../../components/products/ProductTable';
-import { debounce } from '../../utils/helpers';
+import Button from '@/components/admin/ui/Button';
+import Input from '@/components/admin/ui/Input';
+import ProductTable from '@/components/admin/products/ProductTable';
+import { debounce } from '@/utils/helpers';
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
@@ -20,18 +20,17 @@ export default function ProductsPage() {
     limit: 25,
   });
 
-  const { data, isLoading, error } = useQuery(
-    ['products', search, filters, pagination],
-    () => productService.getProducts({
+  // Updated to React Query v5 syntax
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['products', search, filters, pagination],
+    queryFn: () => productService.getProducts({
       search,
       ...filters,
       page: pagination.page,
       limit: pagination.limit,
     }),
-    {
-      keepPreviousData: true,
-    }
-  );
+    keepPreviousData: true,
+  });
 
   const debouncedSearch = debounce((value) => {
     setSearch(value);
