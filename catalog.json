@@ -1,0 +1,76 @@
+[
+  {
+    "id": "basic-black.jpeg",
+    "name": "basic-black.jpeg",
+    "tags": [
+      "canvas",
+      "big",
+      "beige",
+      "black",
+      "grey"
+    ]
+  },
+  {
+    "id": "basic-white.jpeg",
+    "name": "basic-white.jpeg",
+    "tags": [
+      "black",
+      "canvas",
+      "white"
+    ]
+  },
+  {
+    "id": "canvas-beige-big.jpeg",
+    "name": "canvas-beige-big.jpeg",
+    "tags": [
+      "black",
+      "beige",
+      "grey",
+      "canvas",
+      "big"
+    ]
+  },
+  {
+    "id": "canvas-beige.jpeg",
+    "name": "canvas-beige.jpeg",
+    "tags": [
+      "black",
+      "beige",
+      "canvas",
+      "big"
+    ]
+  },
+  {
+    "id": "canvas-black.jpeg",
+    "name": "canvas-black.jpeg",
+    "tags": [
+      "black",
+      "beige",
+      "big",
+      "canvas",
+      "small"
+    ]
+  },
+  {
+    "id": "canvas-grey.jpeg",
+    "name": "canvas-grey.jpeg",
+    "tags": [
+      "black",
+      "canvas",
+      "big",
+      "beige",
+      "small"
+    ]
+  },
+  {
+    "id": "canvas-white.jpeg",
+    "name": "canvas-white.jpeg",
+    "tags": [
+      "beige",
+      "black",
+      "grey",
+      "small",
+      "big"
+    ]
+  }
+]
