@@ -1,17 +1,11 @@
+// pages/api/find-similar.js
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import axios from 'axios';
 import { SearchClient, AzureKeyCredential } from '@azure/search-documents';
+import { pool } from '../../../lib/db';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-// Ensure these env vars are set in your .env file:
-// CV_ENDPOINT, CV_PRED_KEY, CV_PROJECT_ID, CV_ITERATION (optional)
-// SEARCH_ENDPOINT, SEARCH_ADMIN_KEY
+export const config = { api: { bodyParser: false } };
 
 const {
   CV_ENDPOINT: ENDPOINT,
@@ -39,7 +33,7 @@ async function classify(buffer) {
     .map(p => p.tagName);
 }
 
-async function findSimilar(tags) {
+async function findSimilarIds(tags) {
   const client = new SearchClient(
     SEARCH_ENDPOINT,
     INDEX_NAME,
@@ -47,10 +41,11 @@ async function findSimilar(tags) {
   );
   const query = tags.map(t => `"${t}"`).join(' OR ');
   const results = await client.search(query, { top: 8 });
-  return Array.from(results.results).map(r => r.document);
+  // here we only pull out the .id field
+  return Array.from(results.results).map(r => r.document.id);
 }
 
-// Promisified form parsing
+// wrap formidable.parse in a promise
 function parseForm(req) {
   return new Promise((resolve, reject) => {
     const form = new IncomingForm();
@@ -66,20 +61,42 @@ export default async function handler(req, res) {
     const { files } = await parseForm(req);
     const upload = files.file;
     if (!upload) {
-      return res.status(400).json({ error: 'No file uploaded under "file" field' });
+      return res.status(400).json({ error: 'No file uploaded under "file"' });
     }
+    // formidable might give you an array
     const fileObj = Array.isArray(upload) ? upload[0] : upload;
     const filepath = fileObj.filepath || fileObj.path;
-    if (!filepath) {
-      return res.status(400).json({ error: 'File path not found on uploaded file' });
-    }
-    const buffer = fs.readFileSync(filepath);
+    const buffer   = fs.readFileSync(filepath);
+
     const tags = await classify(buffer);
     console.log('Classification tags:', tags);
-    const similar = await findSimilar(tags);
-    return res.status(200).json({ similar });
+
+    // 1) get the array of ID strings from Azure Search
+    const similarIds = await findSimilarIds(tags);
+
+    // 2) fetch full records from Postgres
+    //    assumes you have a table `products(id TEXT PRIMARY KEY, name TEXT, price NUMERIC, image_url TEXT, ...)`
+const { rows } = await pool.query(
+    `SELECT
+      id,
+      name,
+      base_price    AS price,
+      images[1]     AS image_url,   -- grab the first element of the array
+      tags
+    FROM products
+    WHERE id = ANY($1)`,
+  [similarIds]
+);
+
+    // 3) re‑order the rows to match the similarity ranking
+    const byId = Object.fromEntries(rows.map(r => [r.id, r]));
+    const enriched = similarIds
+      .map(id => byId[id])
+      .filter(Boolean);
+
+    return res.status(200).json({ similar: enriched });
   } catch (error) {
-    console.error('Handler error:', error);
-    return res.status(500).json({ error: error.message || 'Internal Server Error' });
+    console.error('find-similar error:', error);
+    return res.status(500).json({ error: error.message });
   }
 }
