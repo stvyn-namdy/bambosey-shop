@@ -57,6 +57,13 @@ function parseForm(req) {
 }
 
 export default async function handler(req, res) {
+    // allow our client to hit this endpoint
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  if (req.method === "OPTIONS") {
+    // preflight
+    res.setHeader("Access-Control-Allow-Methods", "POST");
+    return res.status(200).end();
+  }
   try {
     const { files } = await parseForm(req);
     const upload = files.file;
@@ -77,14 +84,15 @@ export default async function handler(req, res) {
     // 2) fetch full records from Postgres
     //    assumes you have a table `products(id TEXT PRIMARY KEY, name TEXT, price NUMERIC, image_url TEXT, ...)`
 const { rows } = await pool.query(
-    `SELECT
+  `
+    SELECT
       id,
       name,
-      base_price    AS price,
-      images[1]     AS image_url,   -- grab the first element of the array
-      tags
+      base_price    AS price,           -- rename for the client
+      images[1]     AS image_url        -- grab the first image from the array
     FROM products
-    WHERE id = ANY($1)`,
+    WHERE id = ANY($1)
+  `,
   [similarIds]
 );
 
