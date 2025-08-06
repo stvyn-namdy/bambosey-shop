@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import authService from '@/services/auth';
 
 const AuthContext = createContext();
 
@@ -60,39 +61,17 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoading(true);
     try {
-      // For demo purposes - simulate successful login
-      // Replace this with your actual API call
       console.log('🔐 Auth: Attempting login with:', credentials.email);
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Use the real auth service instead of demo
+      const result = await authService.login(credentials);
       
-      // Create demo user data
-      const userData = {
-        id: 'admin-001',
-        email: credentials.email,
-        firstName: 'Admin',
-        lastName: 'User',
-        role: 'admin'
-      };
-
-      const accessToken = 'demo-admin-token-' + Date.now();
-
-      // Store in secure cookie
-      Cookies.set('accessToken', accessToken, { 
-        expires: 1, // 1 day
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
-      });
-      
-      // Store user info in localStorage
-      localStorage.setItem('adminUser', JSON.stringify(userData));
-      
-      setUser(userData);
-      setIsAuthenticated(true);
-      
-      console.log('✅ Auth: Login successful');
-      return userData;
+      if (result.user) {
+        setUser(result.user);
+        setIsAuthenticated(true);
+        console.log('✅ Auth: Login successful');
+        return result.user;
+      }
     } catch (error) {
       console.error('❌ Auth: Login error:', error);
       throw error;

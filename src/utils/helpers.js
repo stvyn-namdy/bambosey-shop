@@ -17,11 +17,21 @@ export const formatNumber = (number) => {
 };
 
 export const formatDate = (date) => {
+  if (!date) return 'N/A';
+  
+  const dateObj = new Date(date);
+  
+  // Check if the date is valid
+  if (isNaN(dateObj.getTime())) {
+    console.warn('Invalid date received:', date);
+    return 'Invalid Date';
+  }
+  
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).format(new Date(date));
+  }).format(dateObj);
 };
 
 export const formatDateTime = (date) => {

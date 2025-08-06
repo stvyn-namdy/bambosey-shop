@@ -110,13 +110,13 @@ const CustomerTable = ({
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
                     <span className="text-primary-600 font-medium text-sm">
-                      {customer.firstName?.[0]}{customer.lastName?.[0]}
+                      {customer.first_name?.[0]}{customer.last_name?.[0]}
                     </span>
                   </div>
                   <div>
                     <Link href={`/customers/${customer.id}`}>
                       <p className="font-medium text-gray-900 hover:text-primary-600">
-                        {customer.firstName} {customer.lastName}
+                        {customer.first_name} {customer.last_name}
                       </p>
                     </Link>
                     {customer.phone && (
@@ -130,22 +130,22 @@ const CustomerTable = ({
               </Table.Cell>
               <Table.Cell>
                 <span className="text-sm text-gray-900">
-                  {customer._count?.orders || 0} orders
+                  {customer.total_orders || 0} orders
                 </span>
               </Table.Cell>
               <Table.Cell>
                 <span className="font-medium text-gray-900">
-                  {formatCurrency(customer.totalSpent || 0)}
+                  {formatCurrency(customer.total_spent || 0)}
                 </span>
               </Table.Cell>
               <Table.Cell>
-                <Badge variant={customer.isActive ? 'success' : 'secondary'}>
-                  {customer.isActive ? 'Active' : 'Inactive'}
+                <Badge variant={customer.is_active ? 'success' : 'secondary'}>
+                  {customer.is_active ? 'Active' : 'Inactive'}
                 </Badge>
               </Table.Cell>
               <Table.Cell>
                 <span className="text-sm text-gray-500">
-                  {formatDate(customer.createdAt)}
+                  {formatDate(customer.created_at)}
                 </span>
               </Table.Cell>
               <Table.Cell>

@@ -7,6 +7,12 @@ export const preorderService = {
     return response.data;
   },
 
+  // Get all preorders for admin
+  getAdminPreorders: async (params = {}) => {
+    const response = await api.get('/preorders/admin/all', { params });
+    return response.data;
+  },
+
   // Get single preorder
   getPreorder: async (id) => {
     const response = await api.get(`/preorders/${id}`);

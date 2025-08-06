@@ -28,8 +28,8 @@ export default function PreordersPage() {
 
   // Updated to React Query v5 syntax
   const { data, isLoading, error } = useQuery({
-    queryKey: ['preorders', search, filters, pagination],
-    queryFn: () => preorderService.getPreorders({
+    queryKey: ['admin-preorders', search, filters, pagination],
+    queryFn: () => preorderService.getAdminPreorders({
       search,
       ...filters,
       page: pagination.page,
@@ -42,7 +42,7 @@ export default function PreordersPage() {
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }) => preorderService.updatePreorderStatus(id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preorders'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-preorders'] });
       toast.success('Preorder status updated');
     },
     onError: (error) => {
@@ -53,7 +53,7 @@ export default function PreordersPage() {
   const convertToOrderMutation = useMutation({
     mutationFn: preorderService.convertToOrder,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['preorders'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-preorders'] });
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       toast.success(`Preorder converted to order #${data.orderNumber}`);
     },
@@ -65,7 +65,7 @@ export default function PreordersPage() {
   const cancelPreorderMutation = useMutation({
     mutationFn: preorderService.cancelPreorder,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preorders'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-preorders'] });
       toast.success('Preorder cancelled');
     },
     onError: (error) => {
@@ -145,7 +145,7 @@ export default function PreordersPage() {
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Total Preorders</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {data?.total || 0}
+                    {data?.pagination?.total || 0}
                   </p>
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function PreordersPage() {
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Ready to Ship</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {data?.readyToShip || 0}
+                    {data?.analytics?.byStatus?.READY?.count || 0}
                   </p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default function PreordersPage() {
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Pending</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {data?.pending || 0}
+                    {data?.analytics?.byStatus?.PENDING?.count || 0}
                   </p>
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default function PreordersPage() {
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Total Value</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {formatCurrency(data?.totalValue || 0)}
+                    {formatCurrency(data?.analytics?.overall?.totalDeposits || 0)}
                   </p>
                 </div>
               </div>
@@ -272,9 +272,9 @@ export default function PreordersPage() {
                         <Table.Cell>
                           <div>
                             <p className="font-medium text-gray-900">
-                              {preorder.customer?.firstName} {preorder.customer?.lastName}
+                              {preorder.user?.firstName} {preorder.user?.lastName}
                             </p>
-                            <p className="text-sm text-gray-500">{preorder.customer?.email}</p>
+                            <p className="text-sm text-gray-500">{preorder.user?.email}</p>
                           </div>
                         </Table.Cell>
                         <Table.Cell>
@@ -291,7 +291,7 @@ export default function PreordersPage() {
                           <span className="font-medium">{preorder.quantity}</span>
                         </Table.Cell>
                         <Table.Cell>
-                          {formatCurrency(preorder.depositAmount)}
+                          {formatCurrency(preorder.depositPaid)}
                         </Table.Cell>
                         <Table.Cell>
                           <Badge variant={statusInfo.color}>
@@ -381,11 +381,11 @@ export default function PreordersPage() {
                 <h4 className="text-sm font-medium text-gray-900 mb-2">Customer</h4>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="font-medium">
-                    {selectedPreorder.customer?.firstName} {selectedPreorder.customer?.lastName}
+                    {selectedPreorder.user?.firstName} {selectedPreorder.user?.lastName}
                   </p>
-                  <p className="text-sm text-gray-600">{selectedPreorder.customer?.email}</p>
-                  {selectedPreorder.customer?.phone && (
-                    <p className="text-sm text-gray-600">{selectedPreorder.customer.phone}</p>
+                  <p className="text-sm text-gray-600">{selectedPreorder.user?.email}</p>
+                  {selectedPreorder.user?.phone && (
+                    <p className="text-sm text-gray-600">{selectedPreorder.user.phone}</p>
                   )}
                 </div>
               </div>
@@ -410,7 +410,7 @@ export default function PreordersPage() {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-gray-900 mb-2">Deposit Amount</h4>
-                <p className="text-lg font-medium">{formatCurrency(selectedPreorder.depositAmount)}</p>
+                <p className="text-lg font-medium">{formatCurrency(selectedPreorder.depositPaid)}</p>
               </div>
               <div>
                 <h4 className="text-sm font-medium text-gray-900 mb-2">Date Created</h4>

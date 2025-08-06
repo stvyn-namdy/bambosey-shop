@@ -103,13 +103,13 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       <OrderTable
-        orders={data?.orders || []}
+        orders={data || []}
         loading={isLoading}
         error={error}
         pagination={{
           ...pagination,
-          total: data?.total || 0,
-          totalPages: data?.totalPages || 0,
+          total: data?.length || 0,
+          totalPages: 1,
         }}
         onPaginationChange={setPagination}
       />

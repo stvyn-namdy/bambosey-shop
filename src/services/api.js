@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 
 // Create axios instance with optimized config
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3300/api',
   timeout: 10000, // 10 second timeout
   headers: {
     'Content-Type': 'application/json',
@@ -14,8 +15,8 @@ const api = axios.create({
 // Request interceptor for auth tokens
 api.interceptors.request.use(
   (config) => {
-    // Add auth token if available
-    const token = localStorage.getItem('accessToken');
+    // Add auth token if available - check both cookies and localStorage
+    const token = Cookies.get('accessToken') || localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -47,7 +48,7 @@ api.interceptors.response.use(
     if (!error.response) {
       // Check if backend is reachable
       try {
-        await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/health`, { timeout: 5000 });
+        await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3300/api'}/health`, { timeout: 5000 });
         toast.error('Network error. Please try again.');
       } catch (healthCheckError) {
         toast.error('Backend server is not responding. Please check if the server is running.');
@@ -112,7 +113,7 @@ api.interceptors.response.use(
 // Health check function
 export const checkBackendHealth = async () => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/health`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3300/api'}/health`, {
       timeout: 5000
     });
     return response.status === 200;

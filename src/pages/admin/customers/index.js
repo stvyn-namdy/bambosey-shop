@@ -95,13 +95,13 @@ export default function CustomersPage() {
 
       {/* Customers Table */}
       <CustomerTable
-        customers={data?.customers || []}
+        customers={data || []}
         loading={isLoading}
         error={error}
         pagination={{
           ...pagination,
-          total: data?.total || 0,
-          totalPages: data?.totalPages || 0,
+          total: data?.length || 0,
+          totalPages: Math.ceil((data?.length || 0) / pagination.limit),
         }}
         onPaginationChange={setPagination}
       />

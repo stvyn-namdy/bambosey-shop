@@ -148,7 +148,7 @@ const ProductTable = ({
               </Table.Cell>
               <Table.Cell>
                 <span className="text-sm text-gray-900">
-                  {formatCurrency(product.price)}
+                  {formatCurrency(product.basePrice)}
                 </span>
               </Table.Cell>
               <Table.Cell>

@@ -54,7 +54,7 @@ const OrderTable = ({
               <Table.Cell>
                 <Link href={`/orders/${order.id}`}>
                   <div className="hover:text-primary-600">
-                    <p className="font-medium text-gray-900">#{order.orderNumber}</p>
+                    <p className="font-medium text-gray-900">#{order.order_number}</p>
                     <p className="text-sm text-gray-500">{order.id}</p>
                   </div>
                 </Link>
@@ -62,9 +62,9 @@ const OrderTable = ({
               <Table.Cell>
                 <div>
                   <p className="font-medium text-gray-900">
-                    {order.customer?.firstName} {order.customer?.lastName}
+                    {order.user?.firstName} {order.user?.lastName}
                   </p>
-                  <p className="text-sm text-gray-500">{order.customer?.email}</p>
+                  <p className="text-sm text-gray-500">{order.user?.email}</p>
                 </div>
               </Table.Cell>
               <Table.Cell>
@@ -74,7 +74,7 @@ const OrderTable = ({
               </Table.Cell>
               <Table.Cell>
                 <span className="font-medium text-gray-900">
-                  {formatCurrency(order.total)}
+                  {formatCurrency(order.totalAmount)}
                 </span>
               </Table.Cell>
               <Table.Cell>
