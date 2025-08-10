@@ -8,12 +8,14 @@
     "start": "next start",
     "extract-tags": "node ./scripts/extract-tags.js",
     "index-catalog": "node ./scripts/index-catalog.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync:search": "node scripts/sync-search.mjs"
   },
   "dependencies": {
     "@azure/cognitiveservices-customvision-prediction": "^5.1.2",
     "@azure/ms-rest-js": "^2.7.0",
     "@azure/search-documents": "^12.1.0",
+    "@prisma/client": "^6.13.0",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.83.0",
     "apexcharts": "^5.3.1",
