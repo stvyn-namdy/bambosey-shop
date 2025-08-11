@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { reviewService } from '../../../services';
+import { reviewService } from '@/services';
 import Image from 'next/image';
 import { Search, Filter, Star, CheckCircle, XCircle, Flag, Reply, MoreHorizontal } from 'lucide-react';
-import Button from '../../../components/admin/ui/Button';
-import Card from '../../../components/admin/ui/Card';
-import Badge from '../../../components/admin/ui/Badge';
-import Table from '../../../components/admin/ui/Table';
-import Modal from '../../../components/admin/ui/Modal';
-import LoadingSpinner from '../../../components/admin/ui/LoadingSpinner';
-import { formatDate, formatDateTime, debounce } from '../../../utils/helpers';
+import Button from '@/components/admin/ui/Button';
+import Card from '@/components/admin/ui/Card';
+import Badge from '@/components/admin/ui/Badge';
+import Table from '@/components/admin/ui/Table';
+import Modal from '@/components/admin/ui/Modal';
+import LoadingSpinner from '@/components/admin/ui/LoadingSpinner';
+import { formatDate, formatDateTime, debounce } from '@/utils/helpers';
 import { toast } from 'react-hot-toast';
 
 export default function ReviewsPage() {

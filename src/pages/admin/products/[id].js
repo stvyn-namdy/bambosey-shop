@@ -1,14 +1,14 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Image from 'next/image'
-import { useProduct, useProductVariants, useUpdateProduct } from '../../hooks/useProducts';
+import { useProduct, useProductVariants, useUpdateProduct } from '@/hooks/useProducts';
 import { Edit, ArrowLeft, Eye, Package } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import Card from '../../components/ui/Card';
-import Badge from '../../components/ui/Badge';
-import ProductVariants from '../../components/products/ProductVariants';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import { formatCurrency, formatDate, getStatusColor } from '../../utils/helpers';
+import Button from '@/components/admin/ui/Button';
+import Card from '@/components/admin/ui/Card';
+import Badge from '@/components/admin/ui/Badge';
+import ProductVariants from '@/components/admin/products/ProductVariants';
+import LoadingSpinner from '@/components/admin/ui/LoadingSpinner';
+import { formatCurrency, formatDate, getStatusColor } from '@/utils/helpers';
 
 export default function ProductDetailPage() {
   const router = useRouter();

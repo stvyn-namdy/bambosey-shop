@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import { useCreateProduct } from '../../hooks/useProducts';
-import ProductForm from '../../components/products/ProductForm';
+import { useCreateProduct } from '@/hooks/useProducts';
+import ProductForm from '@/components/admin/products/ProductForm';
 import { toast } from 'react-hot-toast';
 
 export default function NewProductPage() {
