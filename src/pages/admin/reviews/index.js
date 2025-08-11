@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { reviewService } from '../../../services';
+import Image from 'next/image';
 import { Search, Filter, Star, CheckCircle, XCircle, Flag, Reply, MoreHorizontal } from 'lucide-react';
 import Button from '../../../components/admin/ui/Button';
 import Card from '../../../components/admin/ui/Card';
@@ -399,7 +400,7 @@ export default function ReviewsPage() {
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gray-200 rounded-md flex-shrink-0">
                             {review.product?.images?.[0] ? (
-                              <img
+                              <Image
                                 src={review.product.images[0]}
                                 alt={review.product.name}
                                 className="w-10 h-10 rounded-md object-cover"

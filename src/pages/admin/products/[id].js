@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Image from 'next/image'
 import { useProduct, useProductVariants, useUpdateProduct } from '../../hooks/useProducts';
 import { Edit, ArrowLeft, Eye, Package } from 'lucide-react';
 import Button from '../../components/ui/Button';
@@ -78,7 +79,7 @@ export default function ProductDetailPage() {
             {/* Product Image */}
             <div className="lg:col-span-1">
               {product.images && product.images.length > 0 ? (
-                <img
+                <Image
                   src={product.images[0]}
                   alt={product.name}
                   className="w-full h-64 object-cover rounded-lg border"
