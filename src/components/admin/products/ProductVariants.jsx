@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Edit, Trash2, Plus, Package } from 'lucide-react';
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency } from '@/utils/helpers';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';

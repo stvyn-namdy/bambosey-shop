@@ -4,7 +4,7 @@ import { Save, X, Plus, Trash2, Upload } from 'lucide-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Card from '../ui/Card';
-import { useProductCategories } from '../../hooks/useProducts';
+import { useProductCategories } from '@/hooks/useProducts';
 
 const ProductForm = ({ product, onSubmit, onCancel, loading }) => {
   const [images, setImages] = useState(product?.images || []);
