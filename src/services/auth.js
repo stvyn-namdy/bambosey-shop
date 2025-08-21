@@ -14,7 +14,7 @@ export const authService = {
       console.log('🔐 AuthService: Starting login request...', { email: credentials.email });
       
       // Make request to your backend API
-      const response = await api.post('/auth/login', {
+      const response = await api.post('/api/auth/login', {
         email: credentials.email,
         password: credentials.password,
         role: 'admin', // Specify admin role for backend validation
