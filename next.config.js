@@ -5,7 +5,7 @@ const nextConfig = {
     domains: ['localhost', 'your-backend-domain.com'],
   },
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://bambosey-shop.onrender.com/api',
   },
   webpack: (config) => {
     config.cache = false; // ✅ Disable Webpack cache
